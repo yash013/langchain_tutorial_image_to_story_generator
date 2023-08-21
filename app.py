@@ -57,6 +57,26 @@ def main():
    st.set_page_config(page_title="image to Audio Story", page_icon="🔉") 
    
    st.header("Turn img into audio story")
+   uploaded_file = st.file_uploader("Choose an image...", type="jpg")
+   
+   if uploaded_file:
+       print(uploaded_file)
+       bytes_data = uploaded_file.getvalue()
+       with open(uploaded_file.name, "wb") as f:
+            f.write(bytes_data)
+       st.image(uploaded_file, caption='Uploaded Image.', use_column_width=True)
+       
+       scenario = img2text(uploaded_file.name)
+       story = generate_story(scenario)
+       text2speech(story)
+       
+       with st.expander("scenario"):
+           st.write(scenario)
+       with st.expander("story"):
+           st.write(story)
+       
+       st.audio("audio.mp3")
+
 
 if __name__ == '__main__':
     main()
